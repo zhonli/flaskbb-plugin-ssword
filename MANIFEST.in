@@ -1,0 +1,4 @@
+graft ssword/templates
+graft ssword/translations
+
+global-exclude *.pyc __pycache__ .keep
