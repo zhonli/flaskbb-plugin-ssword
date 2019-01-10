@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
+from abc import ABCMeta, abstractmethod
 
 class BaseLoader():
+    __metaclass__ = ABCMeta
     def __init__(self):
-        pass
-
+         pass
 
 class BaseFileLoader(BaseLoader):
-    def __init__(self, libpath):
-         super(BaseFileLoader, self).__init__(self)
-         self.libpath = libpath
+    def __init__(self, app):
+         super(BaseFileLoader, self).__init__()
+         self.app = app
 
     @abstractmethod
     def load(self):

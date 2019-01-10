@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-import BaseFilter
+from baseFilter import BaseFilter
 from flask import current_app
+
+delimit = '\x00'
 
 class SimpleDFAFilter(BaseFilter):
 
@@ -15,15 +17,44 @@ class SimpleDFAFilter(BaseFilter):
     '''
 
     def __init__(self):
-        #self.keyword_chains = {}
-        self.delimit = '\x00'
+        super(SimpleDFAFilter, self).__init__()
+        # self.keyword_chains = {}
+        # self.delimit = '\x00'
 
-    def build():
-        current_app.keyword_chains = {}
-        for path, bag in current_app.sswords.items():
-            for key, value in bag.items():
-                add(key)
-        pass
+    def check(self, message):
+        if not hasattr(current_app, 'keyword_chains'):
+            current_app.keyword_chains = {}
+        if len(current_app.keyword_chains) == 0:
+            build_dfa_tree()
+        if not isinstance(message, unicode):
+            message = message.decode('utf-8')
+        message = message.lower()
+        tem = []
+        ret = set()
+        start = 0
+        while start < len(message):
+            level = current_app.keyword_chains
+            step_ins = 0
+            for char in message[start:]:
+                if char in level:
+                    step_ins += 1
+                    if delimit not in level[char]:
+                        tem.append(char)
+                        level = level[char]
+                    else:
+                        ret.add(''.join(tem))
+                        start += step_ins - 1
+                        break
+                else:
+                    break
+            else:
+                pass
+                #ret.add(''.join(tem))
+
+            start += 1
+
+        return ret
+
 
     def filter(self, message, repl="*"):
         if not isinstance(message, unicode):
@@ -37,7 +68,7 @@ class SimpleDFAFilter(BaseFilter):
             for char in message[start:]:
                 if char in level:
                     step_ins += 1
-                    if self.delimit not in level[char]:
+                    if delimit not in level[char]:
                         level = level[char]
                     else:
                         ret.append(repl * step_ins)
@@ -51,7 +82,6 @@ class SimpleDFAFilter(BaseFilter):
             start += 1
 
         return ''.join(ret)
-
 
 def add(keyword):
     if not isinstance(keyword, unicode):
@@ -71,7 +101,13 @@ def add(keyword):
                 level[chars[j]] = {}
                 last_level, last_char = level, chars[j]
                 level = level[chars[j]]
-            last_level[last_char] = {self.delimit: 0}
+            last_level[last_char] = {delimit: 0}
             break
     if i == len(chars) - 1:
-        level[self.delimit] = 0
+        level[delimit] = 0
+
+def build_dfa_tree():
+    current_app.keyword_chains = {}
+    for path, bag in current_app.sswords.items():
+        for word, constraint in bag.items():
+            add(word)
