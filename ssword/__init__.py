@@ -62,6 +62,7 @@ def flaskbb_form_new_topic_save(form, topic):
     f = SimpleDFAFilter()
     ss_title = f.check(form.title.data)
     ss_content = f.check(form.content.data)
+    tips = ""
     if len(ss_title) > 0:
         tips = "标题"
     if len(ss_content) > 0:
@@ -83,6 +84,7 @@ SETTINGS = {
     "path": {
         "value": "~/sswords/",
         "value_type": SettingValueType.string,
+        "extra": "",
         "name": "library path",
         "description": "sensitive"
     }

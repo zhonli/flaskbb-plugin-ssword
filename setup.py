@@ -45,11 +45,11 @@ setup(
         ]
     },
     install_requires=[
-        "FlaskBB"  # pin to a version to has pluggy integration
+        "FlaskBB",  # pin to a version to has pluggy integration
+        "watchdog"
     ],
     setup_requires=[
-        "Babel",
-        "watchdog"
+        "Babel"
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
