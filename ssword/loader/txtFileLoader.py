@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import threading
 from .baseLoader import BaseFileLoader
 from flask import current_app
 
@@ -23,6 +24,11 @@ class SimpleTxtFileLoader(BaseFileLoader):
 
                         data[sslib_path] = items
             current_app.sswords = data
+
+    def load_async(self):
+        t = threading.Thread(target=self.load)
+        t.setDaemon(True)
+        t.start()
 
 def to_sslib_path(ospath):
     sslib_path = ospath

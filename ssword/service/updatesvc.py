@@ -8,10 +8,7 @@ class UpdateService(FileSystemEventHandler):
     def __init__(self, app = None):
         FileSystemEventHandler.__init__(self)
         self.app = app
-        with self.app.app_context():
-            if not current_app.ssword_base:
-                raise Exception("can't find the ssword_base in current_app")
-            self.fileLoader = SimpleTxtFileLoader(current_app.ssword_base)
+        self.fileLoader = SimpleTxtFileLoader(app)
 
     def on_moved(self, event):
         if event.is_directory:
@@ -22,6 +19,9 @@ class UpdateService(FileSystemEventHandler):
     def on_created(self, event):
         if event.is_directory:
             print "directory created:{0}".format(event.src_path)
+            with self.app.app_context():
+                current_app.keyword_chains = {}
+            self.fileLoader.load_async()
         else:
             print "file created:{0}".format(event.src_path)
 
@@ -31,17 +31,15 @@ class UpdateService(FileSystemEventHandler):
         else:
             print "file deleted:{0}".format(event.src_path)
 
+        with self.app.app_context():
+            current_app.keyword_chains = {}
+        self.fileLoader.load_async()
+
     def on_modified(self, event):
         if event.is_directory:
             print "directory modified:{0}".format(event.src_path)
         else:
             print "file modified:{0}".format(event.src_path)
-
-        with self.app.app_context():
-            current_app.keyword_chains = None
-            current_app.sswords = self.fileLoader.load()
-
-
-def to_sslib_path(ospath):
-    sslib_path = ospath
-    return sslib_path
+            with self.app.app_context():
+                current_app.keyword_chains = {}
+            self.fileLoader.load_async()

@@ -14,3 +14,7 @@ class BaseFileLoader(BaseLoader):
     @abstractmethod
     def load(self):
         pass
+
+    @abstractmethod
+    def load_async(self):
+        pass

@@ -22,10 +22,9 @@ class SimpleDFAFilter(BaseFilter):
         # self.delimit = '\x00'
 
     def check(self, message):
-        if not hasattr(current_app, 'keyword_chains'):
-            current_app.keyword_chains = {}
         if len(current_app.keyword_chains) == 0:
             build_dfa_tree()
+
         if not isinstance(message, unicode):
             message = message.decode('utf-8')
         message = message.lower()

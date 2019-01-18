@@ -26,10 +26,11 @@ __version__ = "0.1.0"
 # connect the hooks
 
 def flaskbb_extensions(app):
-    print "calling ssword:flaskbb_extensions to initialize"
+    print "calling ssword:flaskbb_extensions to initialize ssword plugin"
     app.ssword_base = os.path.join(os.path.dirname(__file__), "data")
+    app.keyword_chains = {}
     ssword_loader = SimpleTxtFileLoader(app)
-    ssword_loader.load()
+    ssword_loader.load_async()
     watching_async(app)
     pass
 
