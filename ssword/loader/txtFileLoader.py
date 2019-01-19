@@ -13,6 +13,7 @@ class SimpleTxtFileLoader(BaseFileLoader):
 
     def load(self):
         with self.app.app_context():
+            current_app.sswords = {}
             for parent, dirnames, fnames in os.walk(current_app.ssword_base):
                 for fname in fnames:
                     txt_path = os.path.join(parent, fname)
