@@ -3,6 +3,7 @@ import os
 import threading
 import io
 from flask import current_app
+from .baseLoader import BaseFileLoader
 
 class SimpleTxtFileLoader(BaseFileLoader):
     def __init__(self, app):
