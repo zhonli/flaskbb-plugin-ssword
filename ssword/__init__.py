@@ -28,6 +28,7 @@ __version__ = "0.1.0"
 def flaskbb_extensions(app):
     print "calling ssword:flaskbb_extensions to initialize ssword plugin"
     app.ssword_base = os.path.join(os.path.dirname(__file__), "data")
+    app.sswords = {}
     app.keyword_chains = {}
     app.keyword_chains_build_lock = threading.Lock()
     app.sswords_loaded = False
