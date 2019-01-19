@@ -10,38 +10,11 @@ class UpdateService(FileSystemEventHandler):
         self.app = app
         self.fileLoader = SimpleTxtFileLoader(app)
 
-    def on_moved(self, event):
-        if event.is_directory:
-            print "directory moved from {0} to {1}".format(event.src_path, event.dest_path)
-        else:
-            print "file moved from {0} to {1}".format(event.src_path, event.dest_path)
-
-    def on_created(self, event):
-        if event.is_directory:
-            print "directory created:{0}".format(event.src_path)
-            with self.app.app_context():
-                current_app.keyword_chains = {}
-                current_app.sswords_loaded = False
-            self.fileLoader.load_async()
-        else:
-            print "file created:{0}".format(event.src_path)
-
-    def on_deleted(self, event):
-        if event.is_directory:
-            print "directory deleted:{0}".format(event.src_path)
-        else:
-            print "file deleted:{0}".format(event.src_path)
-
-        with self.app.app_context():
-            current_app.keyword_chains = {}
-            current_app.sswords_loaded = False
-        self.fileLoader.load_async()
-
     def on_modified(self, event):
         if event.is_directory:
-            print "directory modified:{0}".format(event.src_path)
-        else:
-            print "file modified:{0}".format(event.src_path)
+            with self.app.app_context():
+                if current_app.ssword_base == event.src_path:
+                    return
             with self.app.app_context():
                 current_app.keyword_chains = {}
                 current_app.sswords_loaded = False
