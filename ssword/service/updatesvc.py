@@ -21,6 +21,7 @@ class UpdateService(FileSystemEventHandler):
             print "directory created:{0}".format(event.src_path)
             with self.app.app_context():
                 current_app.keyword_chains = {}
+                current_app.sswords_loaded = False
             self.fileLoader.load_async()
         else:
             print "file created:{0}".format(event.src_path)
@@ -33,6 +34,7 @@ class UpdateService(FileSystemEventHandler):
 
         with self.app.app_context():
             current_app.keyword_chains = {}
+            current_app.sswords_loaded = False
         self.fileLoader.load_async()
 
     def on_modified(self, event):
@@ -42,4 +44,5 @@ class UpdateService(FileSystemEventHandler):
             print "file modified:{0}".format(event.src_path)
             with self.app.app_context():
                 current_app.keyword_chains = {}
+                current_app.sswords_loaded = False
             self.fileLoader.load_async()

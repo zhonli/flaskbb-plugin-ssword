@@ -9,6 +9,7 @@
     :license: BSD License, see LICENSE for more details.
 """
 import os
+import threading
 from flask_babelplus import lazy_gettext as _
 
 from flaskbb.forum.models import Forum
@@ -16,7 +17,6 @@ from flaskbb.forum.exceptions import StopNewPost, StopEditPost, StopNewTopic
 from flaskbb.utils.helpers import render_template
 from flaskbb.utils.forms import SettingValueType
 
-from .views import ssword_bp
 from .service.watchsvc import watching_async
 from .filter.dfaFilter import SimpleDFAFilter
 from .loader.txtFileLoader import SimpleTxtFileLoader
@@ -29,6 +29,8 @@ def flaskbb_extensions(app):
     print "calling ssword:flaskbb_extensions to initialize ssword plugin"
     app.ssword_base = os.path.join(os.path.dirname(__file__), "data")
     app.keyword_chains = {}
+    app.keyword_chains_build_lock = threading.Lock()
+    app.sswords_loaded = False
     ssword_loader = SimpleTxtFileLoader(app)
     ssword_loader.load_async()
     watching_async(app)
@@ -39,9 +41,6 @@ def flaskbb_load_migrations():
 
 def flaskbb_load_translations():
     return os.path.join(os.path.dirname(__file__), "translations")
-
-def flaskbb_load_blueprints(app):
-    app.register_blueprint(ssword_bp, url_prefix="/ssword")
 
 def flaskbb_form_new_post_save(form):
     f = SimpleDFAFilter()
@@ -75,15 +74,10 @@ def flaskbb_form_new_topic_save(form, topic):
         raise StopNewTopic(tips)
     pass
 
-'''
-def flaskbb_tpl_before_navigation():
-    return render_template("ssword_navlink.html")
-'''
-
 # plugin settings
 SETTINGS = {
     "path": {
-        "value": "~/sswords/",
+        "value": "data/",
         "value_type": SettingValueType.string,
         "extra": "",
         "name": "library path",

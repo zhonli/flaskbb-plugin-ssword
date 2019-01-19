@@ -18,8 +18,6 @@ class SimpleDFAFilter(BaseFilter):
 
     def __init__(self):
         super(SimpleDFAFilter, self).__init__()
-        # self.keyword_chains = {}
-        # self.delimit = '\x00'
 
     def check(self, message):
         if len(current_app.keyword_chains) == 0:
@@ -48,7 +46,6 @@ class SimpleDFAFilter(BaseFilter):
                     break
             else:
                 pass
-                #ret.add(''.join(tem))
 
             start += 1
 
@@ -106,7 +103,12 @@ def add(keyword):
         level[delimit] = 0
 
 def build_dfa_tree():
-    current_app.keyword_chains = {}
-    for path, bag in current_app.sswords.items():
-        for word, constraint in bag.items():
-            add(word)
+    if not current_app.sswords_loaded:
+        return
+    with current_app.keyword_chains_build_lock:
+        if len(current_app.keyword_chains) > 0:
+            return
+        current_app.keyword_chains = {}
+        for path, bag in current_app.sswords.items():
+            for word, constraint in bag.items():
+                add(word)
