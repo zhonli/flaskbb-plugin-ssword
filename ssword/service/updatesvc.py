@@ -15,6 +15,7 @@ class UpdateService(FileSystemEventHandler):
             with self.app.app_context():
                 if current_app.ssword_base == event.src_path:
                     return
+            print 'Sensitive words library changed'
             with self.app.app_context():
                 current_app.keyword_chains = {}
                 current_app.sswords_loaded = False
