@@ -13,10 +13,18 @@ class UpdateService(FileSystemEventHandler):
     def on_modified(self, event):
         if event.is_directory:
             with self.app.app_context():
-                if current_app.ssword_base == event.src_path:
+                if event.src_path != current_app.ssword_base:
                     return
             print 'Sensitive words library changed'
             with self.app.app_context():
                 current_app.keyword_chains = {}
                 current_app.sswords_loaded = False
             self.fileLoader.load_async()
+        else:
+            print '%s modifiled' % event.src_path
+            with self.app.app_context():
+                current_app.keyword_chains = {}
+                current_app.sswords_loaded = False
+            self.fileLoader.load_async()
+
+
