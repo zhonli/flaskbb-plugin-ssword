@@ -39,13 +39,9 @@ class SimpleDFAFilter(BaseFilter):
                         tem.append(char)
                         level = level[char]
                     else:
+                        tem.append(char)
                         ret.add(''.join(tem))
                         start += step_ins - 1
-                        break
-                else:
-                    break
-            else:
-                pass
             start += 1
 
         return ret
