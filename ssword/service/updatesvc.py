@@ -13,7 +13,7 @@ class UpdateService(FileSystemEventHandler):
     def on_modified(self, event):
         if event.is_directory:
             with self.app.app_context():
-                if event.src_path != current_app.ssword_base:
+                if event.src_path != current_app.sswords_base:
                     return
             print 'Sensitive words library changed'
             with self.app.app_context():

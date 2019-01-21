@@ -14,8 +14,6 @@ from flask_babelplus import lazy_gettext as _
 
 from flaskbb.forum.models import Forum
 from flaskbb.forum.exceptions import StopNewPost, StopEditPost, StopNewTopic
-from flaskbb.utils.helpers import render_template
-from flaskbb.utils.forms import SettingValueType
 
 from .service.watchsvc import watching_async
 from .filter.dfaFilter import SimpleDFAFilter
@@ -27,13 +25,14 @@ __version__ = "0.1.0"
 
 def flaskbb_extensions(app):
     print "calling ssword:flaskbb_extensions to initialize ssword plugin"
-    app.ssword_base = os.path.join(os.path.dirname(__file__), "data")
+    app.sswords_base = os.path.join(os.path.dirname(__file__), "data")
     app.sswords = {}
+    app.sswords_loaded = False
     app.keyword_chains = {}
     app.keyword_chains_build_lock = threading.Lock()
-    app.sswords_loaded = False
-    ssword_loader = SimpleTxtFileLoader(app)
-    ssword_loader.load_async()
+
+    sswords_loader = SimpleTxtFileLoader(app)
+    sswords_loader.load_async()
     watching_async(app)
     pass
 
@@ -74,14 +73,3 @@ def flaskbb_form_new_topic_save(form, topic):
         tips += "含有敏感词"
         raise StopNewTopic(tips)
     pass
-
-# plugin settings
-SETTINGS = {
-    "path": {
-        "value": "data/",
-        "value_type": SettingValueType.string,
-        "extra": "",
-        "name": "library path",
-        "description": "sensitive"
-    }
-}

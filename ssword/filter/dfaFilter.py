@@ -46,13 +46,15 @@ class SimpleDFAFilter(BaseFilter):
                     break
             else:
                 pass
-
             start += 1
 
         return ret
 
 
     def filter(self, message, repl="*"):
+        if len(current_app.keyword_chains) == 0：
+            self.build_dfa_tree()
+
         if not isinstance(message, unicode):
             message = message.decode('utf-8')
         message = message.lower()
@@ -109,6 +111,6 @@ def build_dfa_tree():
         if len(current_app.keyword_chains) > 0:
             return
         current_app.keyword_chains = {}
-        for path, bag in current_app.sswords.items():
+        for sslib_path, bag in current_app.sswords.items():
             for word, constraint in bag.items():
                 add(word)
