@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from pypinyin import lazy_pinyin
 from baseFilter import BaseFilter
 from flask import current_app
 
@@ -11,7 +12,6 @@ class SimpleDFAFilter(BaseFilter):
     Use DFA to keep algorithm perform constantly
 
     >>> f = SimpleDFAFilter()
-    >>> f.add("sexy")
     >>> f.filter("hello sexy baby")
     hello **** baby
     '''
@@ -42,13 +42,18 @@ class SimpleDFAFilter(BaseFilter):
                         tem.append(char)
                         ret.add(''.join(tem))
                         start += step_ins - 1
+                else:
+                    tem = []
+                    start += step_ins
+                    break
+
             start += 1
 
         return ret
 
 
     def filter(self, message, repl="*"):
-        if len(current_app.keyword_chains) == 0：
+        if len(current_app.keyword_chains) == 0:
             self.build_dfa_tree()
 
         if not isinstance(message, unicode):
@@ -67,7 +72,6 @@ class SimpleDFAFilter(BaseFilter):
                     else:
                         ret.append(repl * step_ins)
                         start += step_ins - 1
-                        break
                 else:
                     ret.append(message[start])
                     break
@@ -110,3 +114,5 @@ def build_dfa_tree():
         for sslib_path, bag in current_app.sswords.items():
             for word, constraint in bag.items():
                 add(word)
+                pylist = lazy_pinyin(word)
+                add(''.join(pylist))

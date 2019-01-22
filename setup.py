@@ -46,7 +46,8 @@ setup(
     },
     install_requires=[
         "FlaskBB",  # pin to a version to has pluggy integration
-        "watchdog"
+        "watchdog",
+        "pypinyin"
     ],
     setup_requires=[
         "Babel"
