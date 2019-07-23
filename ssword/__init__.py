@@ -11,8 +11,6 @@
 import os
 import threading
 from flask_babelplus import lazy_gettext as _
-
-from flaskbb.forum.models import Forum
 from flaskbb.forum.exceptions import StopNewPost, StopEditPost, StopNewTopic
 
 from .service.watchsvc import watching_async
@@ -21,8 +19,8 @@ from .loader.txtFileLoader import SimpleTxtFileLoader
 
 __version__ = "0.1.0"
 
-# connect the hooks
 
+# connect the hooks
 def flaskbb_extensions(app):
     print "calling ssword:flaskbb_extensions to initialize ssword plugin"
     app.sswords_base = os.path.join(os.path.dirname(__file__), "data")
@@ -36,11 +34,14 @@ def flaskbb_extensions(app):
     watching_async(app)
     pass
 
+
 def flaskbb_load_migrations():
     return os.path.join(os.path.dirname(__file__), "migrations")
 
+
 def flaskbb_load_translations():
     return os.path.join(os.path.dirname(__file__), "translations")
+
 
 def flaskbb_form_new_post_save(form):
     f = SimpleDFAFilter()
@@ -50,6 +51,7 @@ def flaskbb_form_new_post_save(form):
         raise StopNewPost(tips)
     pass
 
+
 def flaskbb_form_edit_post_save(form):
     f = SimpleDFAFilter()
     ss = f.check(form.content.data)
@@ -57,6 +59,7 @@ def flaskbb_form_edit_post_save(form):
         tips = '内容中含有敏感词'
         raise StopEditPost(tips)
     pass
+
 
 def flaskbb_form_new_topic_save(form, topic):
     f = SimpleDFAFilter()

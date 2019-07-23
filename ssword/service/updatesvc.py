@@ -4,6 +4,7 @@ from watchdog.events import FileSystemEventHandler
 from flask import current_app
 from ..loader.txtFileLoader import SimpleTxtFileLoader
 
+
 class UpdateService(FileSystemEventHandler):
     def __init__(self, app = None):
         FileSystemEventHandler.__init__(self)

@@ -6,6 +6,7 @@ from watchdog.observers import Observer
 from .updatesvc import UpdateService
 from flask import current_app
 
+
 def watching_async(app):
     observer = Observer()
     updatesvc = UpdateService(app)

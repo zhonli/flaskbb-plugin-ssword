@@ -1,8 +1,10 @@
 # -*- coding:utf-8 -*-
 
+
 class SimpleNaiveFilter():
 
-    '''Filter Messages from keywords
+    """
+    Filter Messages from keywords
 
     very simple filter implementation
 
@@ -10,7 +12,7 @@ class SimpleNaiveFilter():
     >>> f.add("sexy")
     >>> f.filter("hello sexy baby")
     hello **** baby
-    '''
+    """
 
     def __init__(self):
         self.keywords = set([])

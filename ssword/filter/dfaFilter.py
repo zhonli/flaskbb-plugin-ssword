@@ -5,16 +5,18 @@ from flask import current_app
 
 delimit = '\x00'
 
+
 class SimpleDFAFilter(BaseFilter):
 
-    '''Filter Messages from keywords
+    """
+    Filter Messages from keywords
 
     Use DFA to keep algorithm perform constantly
 
     >>> f = SimpleDFAFilter()
     >>> f.filter("hello sexy baby")
     hello **** baby
-    '''
+    """
 
     def __init__(self):
         super(SimpleDFAFilter, self).__init__()
@@ -51,7 +53,6 @@ class SimpleDFAFilter(BaseFilter):
 
         return ret
 
-
     def filter(self, message, repl="*"):
         if len(current_app.keyword_chains) == 0:
             self.build_dfa_tree()
@@ -81,6 +82,7 @@ class SimpleDFAFilter(BaseFilter):
 
         return ''.join(ret)
 
+
 def add(keyword):
     if not isinstance(keyword, unicode):
         keyword = keyword.decode('utf-8')
@@ -103,6 +105,7 @@ def add(keyword):
             break
     if i == len(chars) - 1:
         level[delimit] = 0
+
 
 def build_dfa_tree():
     if not current_app.sswords_loaded:
